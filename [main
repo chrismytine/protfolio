@@ -1,0 +1,32 @@
+#Импорт
+from flask import Flask, render_template,request, redirect
+
+
+
+app = Flask(__name__)
+
+#Halaman Konten Berjalan
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+def save_form(data):
+    with open('result_form/feedback_result.txt','a',) as f:
+        f.write(f"Email: {data['email']}\n")
+        f.write(f"Feedback: {data['comment']}\n")
+        
+#Keterampilan Dinamis
+@app.route('/', methods=['POST'])
+def process_form():
+    button_python = request.form.get('button_python')
+    email = request.form['email']
+    comment = request.form['text']
+    data = {
+        "email":email,
+        "comment": comment
+    }
+    save_form(data)
+    return render_template('index.html', button_python=button_python)
+
+if __name__ == "__main__":
+    app.run(debug=True)
